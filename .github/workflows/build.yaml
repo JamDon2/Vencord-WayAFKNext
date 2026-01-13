@@ -1,0 +1,46 @@
+name: Build DevBuild
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: 'Vendicated/Vencord'
+
+      - uses: pnpm/action-setup@v3
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build --standalone
+
+      - name: Clean up obsolete files
+        run: |
+          rm -rf dist/*-unpacked dist/vendor Vencord.user.css vencordDesktopRenderer.css vencordDesktopRenderer.css.map
+
+      - name: Get some values needed for the release
+        id: release_values
+        run: |
+          echo "release_tag=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Upload DevBuild as release
+        run: |
+          gh release upload devbuild --clobber dist/*
+          gh release edit devbuild --title "DevBuild $RELEASE_TAG"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ env.release_tag }}
