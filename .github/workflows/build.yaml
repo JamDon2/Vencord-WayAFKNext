@@ -44,7 +44,7 @@ jobs:
           repository: 'Vendicated/Vencord'
 
       - name: Clone WayAFKNext plugin
-        run: git clone https://github.com/MuffinTastic/WayAFKNext.git src/plugins/userplugins
+        run: git clone https://github.com/MuffinTastic/WayAFKNext.git src/userplugins/WayAFKNext
 
       - uses: pnpm/action-setup@v3
 
@@ -73,4 +73,4 @@ jobs:
             --repo ${{ github.repository }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_TAG: ${{ needs.Check.outputs.release_tag }}
+          RELEASE_TAG: ${{ needs.check.outputs.release_tag }}
