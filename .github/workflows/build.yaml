@@ -40,10 +40,13 @@ jobs:
         run: |
           echo "release_tag=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-      - name: Upload DevBuild as release
+      - name: Create new DevBuild release
         run: |
-          gh release upload devbuild --clobber dist/* --repo ${{ github.repository }}
-          gh release edit devbuild --title "DevBuild $RELEASE_TAG" --repo ${{ github.repository }}
+          gh release create "devbuild-$RELEASE_TAG" dist/* \
+            --title "DevBuild $RELEASE_TAG" \
+            --notes "Built from Vencord commit $RELEASE_TAG" \
+            --latest \
+            --repo ${{ github.repository }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: ${{ env.release_tag }}
