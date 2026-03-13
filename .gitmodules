@@ -1,0 +1,3 @@
+[submodule "src/userplugins/WayAFKNext"]
+	path = src/userplugins/WayAFKNext
+	url = https://github.com/MuffinTastic/WayAFKNext.git
